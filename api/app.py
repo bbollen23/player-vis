@@ -11,11 +11,15 @@ sys.path.append(parent_dir)
 
 from flask import Flask, json
 from api.players.players import players_bp
+from api.clubs.clubs import clubs_bp
+from api.attributes.attributes import attributes_bp
 
 
 # Set the static folder and the static url path for the React application
 app = Flask(__name__,static_folder='../build',static_url_path='/')
 app.register_blueprint(players_bp)
+app.register_blueprint(clubs_bp)
+app.register_blueprint(attributes_bp)
 
 # Route which returns the index.html file of the react application
 @app.route("/",methods=['GET'])

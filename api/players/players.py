@@ -1,5 +1,4 @@
-from flask import Blueprint, request,jsonify,render_template
-import os
+from flask import Blueprint,jsonify
 import json
 players_bp = Blueprint('players',__name__,url_prefix='/players')
 
