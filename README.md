@@ -81,8 +81,11 @@ Now your React applicaiton is running on port 3000. To access the application, y
 
 ### `/players`
 **Method:** GET
+
 **Description:** Returns all players as a JSON object list.
+
 **Example:** `curl http://localhost:5000/players/`
+
 **Example Return Response:**
 ```
 [
@@ -204,8 +207,11 @@ Now your React applicaiton is running on port 3000. To access the application, y
 
 ### `/players/{player_name}`
 **Method:** GET
+
 **Description:** Returns single player JSON object.
+
 **Example:** `curl http://localhost:5000/players/CristianoRonaldo`
+
 **Example Return Response:**
 ```
 {
@@ -267,17 +273,25 @@ Now your React applicaiton is running on port 3000. To access the application, y
 
 ### `/attributes`
 **Method:** GET
+
 **Description:** Returns all attributes as a JSON list.
+
 **Example:** `curl http://localhost:5000/attributes/`
+
 **Example Return Response:**
+
 ```
 ["Name","Nationality","National_Position","National_Kit","Club","Club_Position","Club_Kit","Club_Joining","Contract_Expiry","Rating","Height","Weight","Preffered_Foot","Birth_Date","Age","Preffered_Position","Work_Rate","Weak_foot","Skill_Moves","Ball_Control","Dribbling","Marking","Sliding_Tackle","Standing_Tackle","Aggression","Reactions","Attacking_Position","Interceptions","Vision","Composure","Crossing","Short_Pass","Long_Pass","Acceleration","Speed","Stamina","Strength","Balance","Agility","Jumping","Heading","Shot_Power","Finishing","Long_Shots","Curve","Freekick_Accuracy","Penalties","Volleys","GK_Positioning","GK_Diving","GK_Kicking","GK_Handling","GK_Reflexes"]
 ```
 ### `/clubs`
 **Method:** GET
+
 **Description:** Returns the list of clubs and all the players associated with them as a JSON object.
+
 **Example:** `curl http://localhost:5000/clubs/`
+
 **Example Return Response:**
+
 ```
 {"Arsenal":["Mesut \u00d6zil","Alexis S\u00e1nchez","Petr \u010cech"],"Atl\u00e9tico Madrid":["Antoine Griezmann","Diego God\u00edn","Jan Oblak"],"Bayer 04":["Bernd Leno"],"Bor. Dortmund":["Marco Reus","Pierre-Emerick Aubameyang"],"Chelsea":["Thibaut Courtois","Eden Hazard","Diego Costa"],"FC Barcelona":["Lionel Messi","Neymar","Luis Su\u00e1rez","Iniesta","Ivan Rakiti\u0107","Piqu\u00e9","Sergio Busquets","Jordi Alba"],"FC Bayern":["Manuel Neuer","Robert Lewandowski","J\u00e9r\u00f4me Boateng","Mats Hummels","Philipp Lahm","Arturo Vidal","Arjen Robben","David Alaba","Thomas M\u00fcller","Thiago"],"Inter":["Samir Handanovi\u010d"],"Juventus":["Gonzalo Higua\u00edn","Giorgio Chiellini","Gianluigi Buffon","Leonardo Bonucci","Paulo Dybala"],"Liverpool":["Coutinho"],"Manchester City":["Sergio Ag\u00fcero","Kevin De Bruyne","David Silva"],"Manchester Utd":["De Gea","Zlatan Ibrahimovi\u0107","Paul Pogba","Henrikh Mkhitaryan"],"PSG":["Thiago Silva","Marco Verratti","\u00c1ngel Di Mar\u00eda"],"Real Madrid":["Cristiano Ronaldo","Gareth Bale","Luka Modri\u0107","Sergio Ramos","Toni Kroos","Pepe","James Rodr\u00edguez"],"Spurs":["Hugo Lloris"]}
 ```
