@@ -5,10 +5,10 @@ This visualization uses a Flask API as a back-end and a React + D3.js front-end 
 # Application Setup
 To start, we'll need to install the proper npm and python packages. This was developed using the following base versions:
 
--- npm version 8.12.1
--- pip version 20.0.2
--- python3 version 3.8.10
--- Node version 18.4.0
+- npm version 8.12.1
+- pip version 20.0.2
+- python3 version 3.8.10
+- Node version 18.4.0
 
 Since this is a very minimal application, any version above these is expected to work properly. 
 
@@ -39,7 +39,7 @@ There are two ways to run the application. The first is to build the React appli
 
 ## Running the application only using Flask
 
-_A quick note on Flask Port Selection_: In the client folder, there is a file called `.env`. The only variable in this environment file is the base URL for all API requests. If you decide to _not_ use the standard port 5000 for the Flask application, you _must_ change this variable to use the correct port. This also must be done before starting the React application or before building it. There is no error handling in this application for not being able to connect to the API as it is meant to be a simple application. In production, a more robust error handling system would be normally introduced.
+_A quick note on Flask Port Selection_: In the client folder, there is a file called `.env`. The only variable in this environment file is the base URL for all API requests. If you decide to _not_ use the standard port of 5000 for the Flask application, you _must_ change this variable to the appropriate port exposed by the Flask server. This also must be done before starting the React application or before building it. There is no error handling in this application when the API cannot be reached as it is meant to be a simple application. In production, a more robust error handling system would be introduced.
 
 Move to the client directory and build the React application. From the last step, you may already be in the client directory. Once there, call the following:
 
@@ -55,7 +55,7 @@ Move into the `api` directory and start the Flask server.
 cd ../api
 flask --app app run
 ```
-By default, this will serve the application on port 5000. You can adjust this accordingly using the `port` argument. For example, running on port "3001" would require the command `flask --app app run --port=3002`. Make sure to adjust the client `.env` file accordingly if the port is changed.
+By default, this will serve the application on port 5000. You can adjust this accordingly using the `port` argument. For example, running on port "3001" would require the command `flask --app app run --port=3001`. Make sure to adjust the client `.env` file accordingly if the port is changed.
 
 You can now access the application by using "http://localhost:5000/" fully in your Web browser (adjust the port as necessary).
 
