@@ -14,12 +14,10 @@ function sortByKey(data,key,direction='desc'){
 
 
 
-export default function PlayersTable({players,setPlayers,staticPlayers,headers,setHeaders}){
+export default function PlayersTable({players,setPlayers,staticPlayers,headers,setHeaders,setSelectedPlayer,selectedPlayer}){
 
   // Stored which header is being highlighted
   const [headerHover,setHeaderHover] = useState("")
-  // Stores which player is selected
-  const [selected,setSelected] = useState("")
   // Stores which column is currently being sorted
   const [columnSorted,setColumnSorted] = useState({column:'Rating',direction:'desc'})
 
@@ -98,11 +96,14 @@ export default function PlayersTable({players,setPlayers,staticPlayers,headers,s
 
   const playerRows = players.map(player => {
     let key = player['Name'].toLowerCase().replace(' ','');
-
+    let match_key = ''
+    if(Object.keys(selectedPlayer).length !== 0){
+      match_key = selectedPlayer['Name'].toLowerCase().replace(' ','')
+    }
     return(
         <div
-          onClick ={()=> key === selected ? setSelected(""):setSelected(key)}
-          class={key === selected ? 'row selected' : 'row'}
+          onClick ={()=> key === match_key ? setSelectedPlayer({}):setSelectedPlayer(player)}
+          class={key === match_key ? 'row selected' : 'row'}
           style={templateColumns()}
           key={key}>
             {headers.map(entry=><div>{player[entry]}</div>)}
