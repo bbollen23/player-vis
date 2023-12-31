@@ -3,54 +3,13 @@ import * as d3 from 'd3';
 
 
 
-export default function NumericalVisualization({players,headers,selectedPlayer}){
-
-  const numericalKeys = [
-    "Ball_Control",
-    "Dribbling",
-    "Marking",
-    "Sliding_Tackle",
-    "Standing_Tackle",
-    "Aggression",
-    "Reactions",
-    "Attacking_Position",
-    "Interceptions",
-    "Vision",
-    "Composure",
-    "Crossing",
-    "Short_Pass",
-    "Long_Pass",
-    "Acceleration",
-    "Speed",
-    "Stamina",
-    "Strength",
-    "Balance",
-    "Agility",
-    "Jumping",
-    "Heading",
-    "Shot_Power",
-    "Finishing",
-    "Long_Shots",
-    "Curve",
-    "Freekick_Accuracy",
-    "Penalties",
-    "Volleys",
-    "GK_Positioning",
-    "GK_Diving",
-    "GK_Kicking",
-    "GK_Handling",
-    "GK_Reflexes",
-  ]
-
-
-  // List of intersected headers (i.e. different types of histograms)
-  const currentNumericalKeys = numericalKeys.filter(entry => headers.includes(entry))
+export default function NumericalVisualization({players,selectedPlayer,currentNumericalAttributes}){
 
   // Set domain to 1 to 100 (with 1 being the lowest rating and 100 being the highest)
   const domain = Array(100).fill(1).map((n,i)=>i+1)
   //Prepare series as a set of key-value pairs where the keys are the name of the attribute and the values is a histogram counting the number of users with those ratings
   var series = []
-  currentNumericalKeys.forEach(key => {
+  currentNumericalAttributes.forEach(key => {
     let tempValues = new Array(100).fill(0)
     players.forEach(player => {
       let rating = player[key]
@@ -87,7 +46,6 @@ export default function NumericalVisualization({players,headers,selectedPlayer})
 
   // Create the area generator and its top-line generator.
   const area = d3.area(d=>d)
-      // .curve(d3.curveBasis)
       .x((d, i) => x(domain[i]))
       .y0(0)
       .y1(d => z(d));
@@ -98,8 +56,10 @@ export default function NumericalVisualization({players,headers,selectedPlayer})
   const gx = useRef();
   const gy = useRef();
 
+  // Set the X Axis
   useEffect(()=>void d3.select(gx.current).call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0)),[gx,x])
 
+  // Set the Y Axis
   useEffect(()=> void d3.select(gy.current).call(d3.axisLeft(y).tickSize(0).tickPadding(4)).attr('font-size','10px').call(g=>g.select('domain')),[gy,y])
 
   // If there is only one numerical attribute, the y-value will default to the min, instead of the max of the range. To alleviate this, we add in a y-transform function.
@@ -111,6 +71,7 @@ export default function NumericalVisualization({players,headers,selectedPlayer})
     }
   }
 
+  // Line function to connect the individual points in the separated distributions.
   const playerLine = d3.line(
     (d,i)=>x(selectedPlayer[d.name]+1),
     (d,i)=>z(d.values[selectedPlayer[d.name]])+y_transform(d.name))
@@ -189,7 +150,7 @@ export default function NumericalVisualization({players,headers,selectedPlayer})
           </g>)}
 
 
-        {currentNumericalKeys.length === 0 ? <text fill='#6c6c6c' x={(width/2)-(no_numerical_keys_text.length*4)} y={height/2+marginTop}>{no_numerical_keys_text}</text>:<></>}
+        {currentNumericalAttributes.length === 0 ? <text fill='#6c6c6c' x={(width/2)-(no_numerical_keys_text.length*4)} y={height/2+marginTop}>{no_numerical_keys_text}</text>:<></>}
       </svg>
   )
 

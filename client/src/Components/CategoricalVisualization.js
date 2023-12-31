@@ -80,10 +80,12 @@ export default function CategoricalVisualization({players,selectedPlayer,attribu
 
   const gx = useRef();
   const gy = useRef();
+
   useEffect(()=>void d3.select(gx.current).call(d3.axisTop(x).ticks(width / 80)),[gx,x])
 
   useEffect(()=> void d3.select(gy.current).call(d3.axisLeft(y).tickSizeOuter(0)),[gy,y])
 
+  // Used to determine if the current selected player falls within this particular band. 
   const determineSelected = d => {
     if(Object.keys(selectedPlayer).length !== 0){
       if(ordered===true){
@@ -104,7 +106,15 @@ export default function CategoricalVisualization({players,selectedPlayer,attribu
         height={height+marginBottom}
         style={{maxWidth:600}}
       >        
-      {data.map((d,i)=><g fill={determineSelected(d) ? '#fc8d59':'steelblue'}><rect stroke="black" stroke-width={determineSelected(d) ? 1 : 0} x={x(0)} y={y(d.name)-(barHeight/2)} width={x(d.value)-x(0)} height={barHeight}/></g>)}
+      {data.map((d,i)=><g fill={determineSelected(d) ? '#fc8d59':'steelblue'}>
+        <rect 
+          stroke="black"
+          stroke-width={determineSelected(d) ? 1 : 0}
+          x={x(0)}
+          y={y(d.name)-(barHeight/2)}
+          width={x(d.value)-x(0)}
+          height={barHeight}/>
+        </g>)}
         <g ref={gx} transform={`translate(0,${marginTop})`}></g>
         <g ref={gy} transform={`translate(${marginLeft},0)`}></g>
         <text 

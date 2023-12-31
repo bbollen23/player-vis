@@ -9,40 +9,13 @@
   grid-template-columns:40vw 20vw 30vw
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Container for each of the three columns */
+.main-column-container{
+  display:grid;
+  grid-template-rows:80px 750px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Container for header names */
 .main-header-container{
   margin-bottom:20px;
   display: flex;
@@ -53,12 +26,9 @@
   font-weight:bold;
 }
 
-.main-column-container{
-  display:grid;
-  grid-template-rows:80px 750px;
-}
 
-.add-columns-button{
+
+.add-attributes-button{
   justify-self:start;
   padding: 3px 10px;
   text-align: center;
@@ -74,13 +44,14 @@
   margin-left:15px;
 }
 
-.add-columns-button.clicked{
+.add-attributes-button.clicked{
   box-shadow:none;
   top:-2px;
   left:2px;
 }
 
 
+/* Table container */
 .main-table-container{
   display:grid;
   grid-template-rows:50px 1fr;
@@ -97,7 +68,7 @@
   overflow-y:clip;
 }
 
-/* Immediate rows */
+/* Immediate rows (header and then rest of rows*/
 .main-table-container .row{
   display:grid;
   grid-column-gap:20px;
@@ -152,6 +123,7 @@
   display:inline-block;
 }
 
+/* For the second row (which contains all the individual player rows) */
 .main-table-container > .row:not(.header){
   overflow-y: scroll;
   overflow-x:hidden;
@@ -168,25 +140,6 @@
   height:0;
 }
 
-.categorical-vis-container{
-  border:1px solid #D9D9D9;
-  border-radius:10px;
-  overflow-y:scroll;
-  overflow-x:hidden;
-  display:grid;
-  grid-template-columns:1fr;
-  grid-row-gap:50px;
-  grid-auto-rows:auto;
-  box-shadow:2px 2px 6px #D9D9D9;
-  scrollbar-width:none;
-  -ms-overflow-style:none;
-}
-
-.categorical-vis-container::-webkit-scrollbar{
-  width:0;
-  height:0;
-}
-
 /* Individual Player rows */
 .main-table-container .row .row{
   transition: right ease 0.1s;
@@ -194,6 +147,7 @@
   align-self:center;
   position: relative;
 }
+
 
 .main-table-container .row .row div{
   height:30px;
@@ -212,6 +166,31 @@
   border:1px solid black;
   background-color:#D9D9D9;
 }
+
+
+/* Vis styling */
+
+.vis-container{
+  border:1px solid #D9D9D9;
+  border-radius:10px;
+  overflow-y:scroll;
+  overflow-x:hidden;
+  display:grid;
+  grid-template-columns:1fr;
+  grid-row-gap:50px;
+  grid-auto-rows:auto;
+  box-shadow:2px 2px 6px #D9D9D9;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+
+.vis-container::-webkit-scrollbar{
+  width:0;
+  height:0;
+}
+
+
+
 
 /*Modal Styling*/
 .attributes-modal{
@@ -287,4 +266,15 @@
   font-size:8pt;
   font-family: 'Roboto',sans-serif;
   letter-spacing: 1pt;
+}
+
+.player-pill{
+  position:absolute;
+  top:54px;
+  right:108px;
+  text-align:right;
+  font-size:0.8em;
+  border:1px solid #D9D9D9;
+  border-radius:20px;
+  padding:5px 10px
 }
