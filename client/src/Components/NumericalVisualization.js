@@ -138,7 +138,7 @@ export default function NumericalVisualization({players,headers,selectedPlayer})
             className='axis-label'
             style={{fontSize:'12pt'}}
           >
-            Scores
+            Score
           </text>
         </g>:<></>}
         {series.length !== 0 ? 
@@ -157,7 +157,7 @@ export default function NumericalVisualization({players,headers,selectedPlayer})
               textAnchor='start'
               alignmentBaseline='middle'
             >
-              Attributes
+              Attribute
             </text>
           </g>: <></>}
         <g>
