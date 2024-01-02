@@ -3,26 +3,28 @@ import { useState,useEffect} from 'react';
 import PlayersTable from './Components/PlayersTable';
 import { fetchPlayers,fetchAttributes } from './api.js';
 import AttributesModal from './Components/AttributesModal.js';
-import NumericalVisualization from './Components/NumericalVisualization.js';
-import CategoricalVisualization from './Components/CategoricalVisualization.js';
+import NumericalVisualization from './Components/NumericalVisualization';
+import {Player} from './types'
+import CategoricalVisualization from './Components/CategoricalVisualization';
 
 // Main entry point for application. Most of our state is set here and passed to the individual components since they each will be interacting with each other. 
 
 function App() {
+
   // Players
-  const [players, setPlayers] = useState([]);
+  const [players, setPlayers] = useState<Array<Player>|null>(null);
 
   //Single Player
-  const [selectedPlayer,setSelectedPlayer] = useState({})
+  const [selectedPlayer,setSelectedPlayer] = useState<Player|null>(null)
 
   // Used to store original order of players. This comes in handy when we want to essentially "unsort" a column.
-  const [staticPlayers,setStaticPlayers] = useState([]);
+  const [staticPlayers,setStaticPlayers] = useState<Array<Player>|null>(null);
   
   //Used to get and store the set of all attributes
-  const [attributes,setAttributes] = useState([])
+  const [attributes,setAttributes] = useState<Array<string>>([])
 
   // Used for determining current attributes
-  const [headers,setHeaders] = useState([
+  const [headers,setHeaders] = useState<Array<string>>([
     "Name",
     "Rating",
     "Nationality",
@@ -36,15 +38,16 @@ function App() {
 
 
   // For animation of 'Add Attriutes' button
-  const [clicked,setClicked] = useState(false)
+  const [clicked,setClicked] = useState<boolean>(false)
 
   //Opening and closing Attributes modal state
-  const [modal,showModal] = useState(false)
+  const [modal,showModal] = useState<boolean>(false)
 
   // Fetch All Players
   useEffect(() => {
-    fetchPlayers().then(playersReturned=>{
+    fetchPlayers().then((playersReturned:Array<Player>):void=>{
       setPlayers(playersReturned)
+      console.log(playersReturned)
       // Make a shallow copy of the players and store in the staticPlayers state value
       setStaticPlayers([...playersReturned])
       fetchAttributes().then(attributesReturned=>{
@@ -54,7 +57,7 @@ function App() {
     );
   }, []);
 
-  const categoricalAttributes = [
+  const categoricalAttributes:Array<string> = [
     "Nationality",
     "National_Position",
     "National_Kit",
@@ -72,7 +75,7 @@ function App() {
   ]
 
   // Set of attributes which are categorical, but are still ordered
-  const isOrderedList = [
+  const isOrderedList:Array<string>= [
     'Weight',
     'Height',
     'Age',
@@ -81,7 +84,7 @@ function App() {
   ]
 
   //Attributes where the range is known, but does not fall within the standard 0-100 for the numerical categories. We want to bin these differently than d3's automatic binning.
-  const OrderedBinsMap = {
+  const OrderedBinsMap:Record<string,number> = {
     "Weak_foot":5,
     "Skill_Moves":5
   }
@@ -89,7 +92,7 @@ function App() {
   //Get all current categorical attributes present
   const currCategoricalAttributes = categoricalAttributes.filter(entry => headers.includes(entry))
 
-  const numericalKeys = [
+  const numericalKeys:Array<string>= [
     "Ball_Control",
     "Dribbling",
     "Marking",
@@ -128,8 +131,7 @@ function App() {
 
 
   // List of intersected headers (i.e. different types of histograms)
-  const currentNumericalAttributes = numericalKeys.filter(entry => headers.includes(entry))
-
+  const currentNumericalAttributes:Array<string> = numericalKeys.filter(entry => headers.includes(entry))
 
   return (
     <div className="App">
@@ -147,15 +149,17 @@ function App() {
           }}
           >Add Attributes</div>
         </div>
-        <PlayersTable
-          players={players}
-          setPlayers={setPlayers}
-          staticPlayers={staticPlayers}
-          headers={headers}
-          setHeaders={setHeaders}
-          selectedPlayer={selectedPlayer}
-          setSelectedPlayer={setSelectedPlayer}
-        />
+        { players && staticPlayers ?
+          <PlayersTable
+            players={players}
+            setPlayers={setPlayers}
+            staticPlayers={staticPlayers}
+            headers={headers}
+            setHeaders={setHeaders}
+            selectedPlayer={selectedPlayer}
+            setSelectedPlayer={setSelectedPlayer}
+          />
+        :<></>}
       </div>
       <div className='main-column-container'>
         <div className = 'main-header-container'>
@@ -164,13 +168,14 @@ function App() {
           </div>
         </div>
         <div className='vis-container'>
-          {players.length !== 0 ? currCategoricalAttributes.map(entry =>
+          {players ? currCategoricalAttributes.map(entry =>
             <CategoricalVisualization
+              key={entry}
               attribute={entry}
               players={players}
               selectedPlayer={selectedPlayer}
               ordered={isOrderedList.includes(entry)}
-              nbins={Object.keys(OrderedBinsMap).includes(entry)? OrderedBinsMap[entry]:null}
+              nbins={entry in OrderedBinsMap ? OrderedBinsMap[entry]:-1}
             />
           )
           :<></>}
@@ -182,15 +187,17 @@ function App() {
             Numerical Attributes
           </div>
         </div>
-        <div class='vis-container'>
-          <NumericalVisualization
-            players={players}
-            selectedPlayer={selectedPlayer}
-            currentNumericalAttributes={currentNumericalAttributes}
-          />
+        <div className='vis-container'>
+          {players ? 
+            <NumericalVisualization
+              players={players}
+              selectedPlayer={selectedPlayer}
+              currentNumericalAttributes={currentNumericalAttributes}
+            />
+          :<></>}
         </div>
       </div>
-      {Object.keys(selectedPlayer).length !==0 ? 
+      {selectedPlayer !== null ? 
         <div className='player-pill'>
           Selected Player: <b>{selectedPlayer.Name}</b>
         </div>:<></>}

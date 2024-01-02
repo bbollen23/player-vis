@@ -1,11 +1,11 @@
 
 import Modal from 'react-modal';
+import { AttributesModalInput } from '../types';
 
 
 
 
-export default function AttributesModal({attributes,headers,setHeaders,modal,showModal}){
-
+export default function AttributesModal({attributes,headers,setHeaders,modal,showModal}:AttributesModalInput){
 
   const attributesComponent = attributes.map(entry => {
     let selected = headers.includes(entry)

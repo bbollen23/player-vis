@@ -6,6 +6,10 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/d3": "^7.4.3",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "@types/react-modal": "^3.16.3",
     "d3": "^7.8.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -13,6 +17,9 @@
     "react-modal": "^3.16.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
+  },
+  "overrides": {
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -37,5 +44,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
   }
 }
