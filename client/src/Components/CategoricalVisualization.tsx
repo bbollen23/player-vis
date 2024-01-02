@@ -4,7 +4,7 @@ import { CategoricalVisualizationInput,Data,Player } from '../types';
 
 
 
-export default function CategoricalVisualization({players,selectedPlayer,attribute,ordered=false,nbins=-1}:CategoricalVisualizationInput){
+export default function CategoricalVisualization({players,selectedPlayer,attribute,ordered=false,nbins=-1}:CategoricalVisualizationInput):JSX.Element{
 
   interface CatUnorderedData extends Data{
     value:number
@@ -139,7 +139,7 @@ export default function CategoricalVisualization({players,selectedPlayer,attribu
         style={{maxWidth:600}}
       >        
       {data.map((d,i)=>
-      <g key={i} fill={determineSelected(d) ? '#fc8d59':'steelblue'}>
+      <g key={attribute + '-bar-group-'+i.toString()} fill={determineSelected(d) ? '#fc8d59':'steelblue'}>
         <rect 
           stroke="black"
           strokeWidth={determineSelected(d) ? 1 : 0}

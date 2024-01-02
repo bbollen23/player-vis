@@ -5,13 +5,14 @@ import { AttributesModalInput } from '../types';
 
 
 
-export default function AttributesModal({attributes,headers,setHeaders,modal,showModal}:AttributesModalInput){
+export default function AttributesModal({attributes,headers,setHeaders,modal,showModal}:AttributesModalInput):JSX.Element{
 
   const attributesComponent = attributes.map(entry => {
     let selected = headers.includes(entry)
     return(
       <div 
       className={selected ? 'attribute selected':'attribute'}
+      key={'attribute-'+entry}
       onClick={()=>{
         if(selected){
           let newHeaders = headers.filter(header => header !== entry)
@@ -32,6 +33,7 @@ export default function AttributesModal({attributes,headers,setHeaders,modal,sho
     overlayClassName='attributes-modal-overlay'
     isOpen={modal}
     onRequestClose={()=>showModal(false)}
+    ariaHideApp={false}
   >            
     <div 
       style={{position:'absolute',height:'0px',top:'10px',right:'10px',cursor:'pointer'}}

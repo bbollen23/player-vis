@@ -29,7 +29,7 @@
 
 
 .add-attributes-button{
-  justify-self:start;
+  justify-self:flex-start;
   padding: 3px 10px;
   text-align: center;
   align-self:center;
@@ -55,7 +55,7 @@
 .main-table-container{
   display:grid;
   grid-template-rows:50px 1fr;
-  justify-content: start;
+  justify-content: flex-start;
   max-width:calc(40vw - 80px);
   overflow-x:scroll;
   border-radius:5px;
@@ -103,8 +103,8 @@
   border-radius:8px;
   padding:3px 10px;
   display:flex;
-  align-items: start;
-  justify-content: start;
+  align-items: flex-start;
+  justify-content: flex-start;
   color:#b9b9b9;
 }
 

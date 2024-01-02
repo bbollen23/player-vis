@@ -2,7 +2,7 @@ import { useState} from 'react';
 import { TiArrowUnsorted,TiArrowSortedDown,TiArrowSortedUp } from "react-icons/ti";
 import { PlayersTableInput,Player,SortedColumn } from '../types';
 
-function sortByKey(data:Array<Player>,key:string,direction='desc'){
+function sortByKey(data:Array<Player>,key:string,direction='desc'):Array<Player>{
   // Make shallow copy of data. The dataset is not nested, so there is no need for a deep copy.
   let tempData = [...data]
   if(direction === 'desc'){
@@ -15,13 +15,12 @@ function sortByKey(data:Array<Player>,key:string,direction='desc'){
 
 
 
-export default function PlayersTable({players,setPlayers,staticPlayers,headers,setHeaders,setSelectedPlayer,selectedPlayer}:PlayersTableInput){
+export default function PlayersTable({players,setPlayers,staticPlayers,headers,setHeaders,setSelectedPlayer,selectedPlayer}:PlayersTableInput):JSX.Element{
 
   // Stores which header is being highlighted
   const [headerHover,setHeaderHover] = useState<string>("")
   // Stores which column is currently being sorted. Starts as 'Rating' since this how the base dataset is already sorted.
   const [columnSorted,setColumnSorted] = useState<SortedColumn|null>({column:'Rating',direction:'desc'})
-
 
 
   const tableHeaders = headers.map(entry => {
@@ -117,8 +116,8 @@ export default function PlayersTable({players,setPlayers,staticPlayers,headers,s
           onClick ={()=> key === match_key ? setSelectedPlayer(null):setSelectedPlayer(player)}
           className={key === match_key ? 'row selected' : 'row'}
           style={templateColumns()}
-          key={key}>
-            {headers.map(entry=><div key={player[entry]}>{player[entry]}</div>)}
+          key={'player-' + key}>
+            {headers.map(entry=><div key={'player-' + key + '-' +entry}>{player[entry]}</div>)}
         </div>
       )
     }

@@ -2,7 +2,7 @@ import './App.css';
 import { useState,useEffect} from 'react';
 import PlayersTable from './Components/PlayersTable';
 import { fetchPlayers,fetchAttributes } from './api.js';
-import AttributesModal from './Components/AttributesModal.js';
+import AttributesModal from './Components/AttributesModal';
 import NumericalVisualization from './Components/NumericalVisualization';
 import {Player} from './types'
 import CategoricalVisualization from './Components/CategoricalVisualization';
@@ -47,7 +47,6 @@ function App() {
   useEffect(() => {
     fetchPlayers().then((playersReturned:Array<Player>):void=>{
       setPlayers(playersReturned)
-      console.log(playersReturned)
       // Make a shallow copy of the players and store in the staticPlayers state value
       setStaticPlayers([...playersReturned])
       fetchAttributes().then(attributesReturned=>{
@@ -74,25 +73,11 @@ function App() {
     "Skill_Moves"
   ]
 
-  // Set of attributes which are categorical, but are still ordered
-  const isOrderedList:Array<string>= [
-    'Weight',
-    'Height',
-    'Age',
-    'Weak_foot',
-    'Skill_Moves'
-  ]
-
-  //Attributes where the range is known, but does not fall within the standard 0-100 for the numerical categories. We want to bin these differently than d3's automatic binning.
-  const OrderedBinsMap:Record<string,number> = {
-    "Weak_foot":5,
-    "Skill_Moves":5
-  }
-
   //Get all current categorical attributes present
-  const currCategoricalAttributes = categoricalAttributes.filter(entry => headers.includes(entry))
+  const currCategoricalAttributes:Array<string> = categoricalAttributes.filter(entry => headers.includes(entry))
 
-  const numericalKeys:Array<string>= [
+  // Numerical Attributes
+  const numericalAttributes:Array<string>= [
     "Ball_Control",
     "Dribbling",
     "Marking",
@@ -129,16 +114,32 @@ function App() {
     "GK_Reflexes",
   ]
 
+  // Get all current numerical attributes present
+  const currentNumericalAttributes:Array<string> = numericalAttributes.filter(entry => headers.includes(entry))
 
-  // List of intersected headers (i.e. different types of histograms)
-  const currentNumericalAttributes:Array<string> = numericalKeys.filter(entry => headers.includes(entry))
+  // Set of attributes which are categorical, but are still ordered
+  const isOrderedList:Array<string>= [
+    'Weight',
+    'Height',
+    'Age',
+    'Weak_foot',
+    'Skill_Moves'
+  ]
+
+  //Attributes where the range is known, but does not fall within the standard 0-100 for the numerical categories. We want to bin these differently than d3's automatic binning.
+  const OrderedBinsMap:Record<string,number> = {
+    "Weak_foot":5,
+    "Skill_Moves":5
+  }
+
+
 
   return (
     <div className="App">
       <div className='main-column-container'>
         <div className='main-header-container'>
           <div className="main-header">Soccer Players</div>
-          <div className={clicked? 'add-attributes-button clicked':'add-attributes-button'}
+          <div className={clicked ? 'add-attributes-button clicked':'add-attributes-button'}
           onMouseDown={() => {setClicked(true)}}
           onMouseUp={()=>{
             setClicked(false)
@@ -197,7 +198,7 @@ function App() {
           :<></>}
         </div>
       </div>
-      {selectedPlayer !== null ? 
+      {selectedPlayer ? 
         <div className='player-pill'>
           Selected Player: <b>{selectedPlayer.Name}</b>
         </div>:<></>}

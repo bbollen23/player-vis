@@ -1,17 +1,17 @@
-import { FC, useEffect, useRef} from 'react';
+import {useEffect, useRef} from 'react';
 import * as d3 from 'd3';
 import { NumericalVisualizationInput,Data} from '../types';
 
 
 
-export default function NumericalVisualization({currentNumericalAttributes,players,selectedPlayer=null}:NumericalVisualizationInput){
+export default function NumericalVisualization({currentNumericalAttributes,players,selectedPlayer=null}:NumericalVisualizationInput):JSX.Element{
 
+  // Extend the Data interface by adding a number array as 'values'
   interface NumericalData extends Data{
-    values:number[]
+    values:Array<number>
   }
 
-  // Set domain to 1 to 100 (with 1 being the lowest rating and 100 being the highest)
-  const domain = Array(100).fill(1).map((n,i)=>i+1)
+
   //Prepare series as a set of key-value pairs where the keys are the name of the attribute and the values is a histogram counting the number of users with those ratings
   var series:Array<NumericalData> = []
   if(players !== null){
@@ -37,6 +37,7 @@ export default function NumericalVisualization({currentNumericalAttributes,playe
   const marginBottom = 80;
   const marginLeft = 120;
 
+
   // Controls the x-scale
   const x = d3.scaleLinear()
     .domain([1,100])
@@ -47,7 +48,7 @@ export default function NumericalVisualization({currentNumericalAttributes,playe
       .domain(series.map(d => d.name))
       .range([marginTop, height]);
 
-  // If there is only one numerical attribute, the y-value will default to the min, instead of the max of the range. To alleviate this, we add in a y-transform function.
+  // If there is only one numerical attribute, the y-value will default to the min, instead of the max of the range. To alleviate this, we add in a y-transform function. Handles case with inputted name not being in the y-axis domain.
   const y_transform = (name:string):number => {
     if(series.length === 1){
       return series.length*chart_height
@@ -66,18 +67,22 @@ export default function NumericalVisualization({currentNumericalAttributes,playe
       .domain([0, 10]).nice()
       .range([0, -40]);
 
-  function generateDistributionData(data:NumericalData):[string,string] | undefined {
+  // Define the interface for the Distribution Data from D3
+  interface DistributionData{
+    area:string|null,
+    line:string|null
+  }
+
+  function generateDistributionData(data:NumericalData): DistributionData | undefined {
       if(data.values){
-        const area = d3.area<number>()
-        .x((d,i)=>x(domain[i]))
+        const area: d3.Area<number> = d3.area<number>()
+        .x((d,i)=>x(i+1))
         .y0(0)
         .y1((d) => z(d))
 
-        const line = area.lineY1();
+        const line: d3.Line<number> = area.lineY1();
 
-        let generatedArea = area(data.values)! //Assert that the generatedArea is defined
-        let generatedLine = line(data.values)! //Assert generatedLine is defined
-        return [generatedArea,generatedLine]
+        return {'area':area(data.values),'line':line(data.values)}
       } else {
         return undefined;
       }
@@ -105,9 +110,9 @@ export default function NumericalVisualization({currentNumericalAttributes,playe
 
   // Line function to connect the individual points in the separated distributions.
   const playerLine:d3.Line<NumericalData> = d3.line(
-    (d,i)=>selectedPlayer !== null ? (x(selectedPlayer[d.name] as number +1)) : 0,
-    (d,i)=>{
-      if(selectedPlayer !==null){
+    (d:NumericalData)=>selectedPlayer !== null ? (x(selectedPlayer[d.name] as number +1)) : 0,
+    (d:NumericalData)=>{
+      if(selectedPlayer){
         let rating:number = selectedPlayer[d.name] as number;
         if(d.values){
           let dvalue = d.values[rating]
@@ -146,7 +151,7 @@ export default function NumericalVisualization({currentNumericalAttributes,playe
         {series.length !== 0 ? 
           <g
             ref={gy}
-            font-size={20}
+            fontSize={20}
             transform={`translate(${marginLeft},0)`}
           >
             <text
@@ -163,23 +168,25 @@ export default function NumericalVisualization({currentNumericalAttributes,playe
             </text>
           </g>: <></>}
         <g>
-          {series.map(data => 
-            
+          {series.map((data:NumericalData,i:number):JSX.Element => 
             {
               let distribution = generateDistributionData(data)
               if(distribution){
                 return (
-                  <g transform={`translate(0,${y_transform(data.name)})`}>
-                    <path fill='steelblue' d={distribution[0]}/>
-                    <path fill="none" stroke="black" d={distribution[1]}/>
+                  <g key={'distribution-group-' + i.toString()} transform={`translate(0,${y_transform(data.name)})`}>
+                    {/* Set the values of 'd' to just an undefined attribute if the area or line keys are null or undefined. */}
+                    <path fill='steelblue' d={distribution.area ?? undefined}/>
+                    <path fill="none" stroke="black" d={distribution.line ?? undefined}/>
                   </g>
                 )    
+              } else {
+                return <></>
               }
             }
           )}
         </g>
         {/* Generate the path individual circles and the path connecting them. */}
-        {selectedPlayer !== null && series.length != 0?
+        {selectedPlayer && series.length !== 0?
           <path 
           // Casting playerLine(series) as string since the series.length must be non-zero and valid.
             d={playerLine(series) as string}
@@ -187,17 +194,17 @@ export default function NumericalVisualization({currentNumericalAttributes,playe
             stroke='#fc8d59'
             strokeWidth={2.5}
           />:<></>}
-        {series.map(data => <g transform={`translate(0,${y_transform(data.name)})`}>
-            {selectedPlayer !== null &&  data.values ?
-              <circle
-                cx={x(selectedPlayer[data.name] as number +1)}
-                cy={z(data.values[selectedPlayer[data.name] as number])}
-                r={5}
-                fill='#fc8d59'
-                stroke='black'
-                strokeWidth={1}
-              />:<></>}
-          </g>)}
+        {selectedPlayer ? series.map((data:NumericalData,i:number):JSX.Element => 
+          <g key={'selected-player-circle-'+i.toString()}transform={`translate(0,${y_transform(data.name)})`}>
+            <circle
+              cx={x(selectedPlayer[data.name] as number +1)}
+              cy={z(data.values[selectedPlayer[data.name] as number])}
+              r={5}
+              fill='#fc8d59'
+              stroke='black'
+              strokeWidth={1}
+            />
+          </g>):<></>}
 
 
         {currentNumericalAttributes.length === 0 ? <text fill='#6c6c6c' x={(width/2)-(no_numerical_keys_text.length*4)} y={height/2+marginTop}>{no_numerical_keys_text}</text>:<></>}
